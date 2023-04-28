@@ -13,6 +13,7 @@ import com.auth.api.util.MessageConst;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,8 +26,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -53,7 +56,10 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "Internal server Error")
     })
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDto loginDto){
+    public ResponseEntity<AuthResponseDTO> login(HttpServletRequest httpServletRequest, @RequestBody LoginDto loginDto){
+
+        log.info("Path: " + httpServletRequest.getRequestURI());
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                 loginDto.getUsername(),
@@ -71,7 +77,10 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "Internal server Error")
     })
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<String> register(HttpServletRequest httpServletRequest, @RequestBody RegisterDto registerDto) {
+
+        log.info("Path: " + httpServletRequest.getRequestURI());
+        
         if (Boolean.TRUE.equals(userRepository.existsByUsername(registerDto.getUsername()))) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
         }
