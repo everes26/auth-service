@@ -56,7 +56,8 @@ public class SecurityConfig {
                 .and()
                 .addFilterBefore(filter, BasicAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/register").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated();

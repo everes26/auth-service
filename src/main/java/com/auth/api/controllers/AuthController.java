@@ -31,7 +31,7 @@ import java.util.Collections;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -66,7 +66,9 @@ public class AuthController {
                 loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtGenerator.generateToken(authentication);
-        return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
+        UserEntity user = userRepository.findByUsername(loginDto.getUsername()).get();
+        AuthResponseDTO response = new AuthResponseDTO(token, user);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(description = "Register account")

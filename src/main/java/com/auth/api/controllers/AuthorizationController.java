@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/")
 public class AuthorizationController {
 
     @Operation(description = "Check user")
