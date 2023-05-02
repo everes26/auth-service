@@ -1,7 +1,6 @@
 package com.auth.api.exception;
 
 import com.auth.api.enums.ErrorCode;
-import com.auth.api.enums.ErrorMessage;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -21,10 +20,6 @@ public class BasicException extends RuntimeException {
 
     public BasicException(String code) {
         this.code = code;
-    }
-
-    public BasicException(ErrorMessage errorMessage) {
-        this.code = errorMessage.name().toLowerCase();
     }
 
     public BasicException(String code, String message) {
