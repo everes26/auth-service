@@ -7,7 +7,7 @@ import lombok.Data;
 public class AuthResponseDTO {
     private String accessToken;
     private String tokenType = "Bearer ";
-    private int id;
+    private Long id;
     private String username;
     private String email;
 
