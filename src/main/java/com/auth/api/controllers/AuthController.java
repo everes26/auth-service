@@ -3,6 +3,7 @@ package com.auth.api.controllers;
 import com.auth.api.dto.AuthResponseDTO;
 import com.auth.api.dto.LoginDto;
 import com.auth.api.dto.RegisterDto;
+import com.auth.api.enums.ErrorCode;
 import com.auth.api.exception.BasicException;
 import com.auth.api.models.Role;
 import com.auth.api.models.UserEntity;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -82,13 +84,29 @@ public class AuthController {
     public ResponseEntity<String> register(HttpServletRequest httpServletRequest, @RequestBody RegisterDto registerDto) {
 
         log.info("Path: " + httpServletRequest.getRequestURI());
-        
-        if (Boolean.TRUE.equals(userRepository.existsByUsername(registerDto.getUsername()))) {
-            return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
-        }
-        if (Boolean.TRUE.equals(userRepository.existsByEmail(registerDto.getEmail()))) {
-            return new ResponseEntity<>("Email is taken!", HttpStatus.BAD_REQUEST);
-        }
+
+        if (StringUtils.isBlank(registerDto.getUsername())
+                || StringUtils.isBlank(registerDto.getPassword())
+                || StringUtils.isBlank(registerDto.getUsername()))
+            throw BasicException.builder()
+                    .code(ErrorCode.BAD_REQUEST.getCode())
+                    .message("Username, Password and Email cannot be blank")
+                    .errors(Collections.singletonList("Username, Password and Email cannot be blank"))
+                    .build();
+
+        if (Boolean.TRUE.equals(userRepository.existsByUsername(registerDto.getUsername())))
+            throw BasicException.builder()
+                    .code(ErrorCode.BAD_REQUEST.getCode())
+                    .message("Username already registered")
+                    .errors(Collections.singletonList("Username " + registerDto.getUsername() + " is already registered"))
+                    .build();
+
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(registerDto.getEmail())))
+            throw BasicException.builder()
+                    .code(ErrorCode.BAD_REQUEST.getCode())
+                    .message("Email already registered")
+                    .errors(Collections.singletonList("Email " + registerDto.getEmail() + " is already registered"))
+                    .build();
 
         UserEntity user = new UserEntity();
         user.setUsername(registerDto.getUsername());

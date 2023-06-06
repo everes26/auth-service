@@ -1,6 +1,7 @@
 package com.auth.api.exception;
 
 import com.auth.api.enums.ErrorCode;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
 
 @Data
+@Builder
 public class BasicException extends RuntimeException {
     public static final BasicException INVALID_ARGUMENT = new BasicException(ErrorCode.INVALID_ARGUMENT.name().toLowerCase());
     public static final BasicException NOT_FOUND = new BasicException(ErrorCode.NOT_FOUND.name().toLowerCase());
